@@ -1,0 +1,43 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Versi schema Docker Compose yang digunakan pada project ini
+# Saat ini (19/06/23) versi terbaru dari schema Docker Compose adalah 3.9
+version: "3.9"
+
+# Pendefinisian service yang digunakan pada aplikasi Item-app
+# Terdiri dari item-app (aplikasi utama) dan item-db (database dari aplikasi utama)
+services:
+  # Pembuatan service item-app (aplikasi utama)
+  item-app:
+    # Menggunakan image pada Github Package dari hasil build image sebelumnya
+    image: ghcr.io/tegarnh/a433-microservices/item-app:v1
+
+    # Melakukan ekspos port 8080 pada container menjadi port 80 untuk dapat diakses pada host (localhost:80)
+    ports:
+      - 80:8080
+
+    # Menentukan urutan service yang akan dijalankan terlebih dahulu
+    # Dalam hal ini, service item-db akan dijalankan terlebih dahulu sebelum service item-app dijalankan
+    depends_on:
+      - item-db
+
+    # Melakukan restart container apabila terjadi kesalahan pada container (restart policy)
+    restart: always
+
+  # Pembuatan service item-db (database dari aplikasi utama)
+  item-db:
+    # Menggunakan image mongo:3 (mongoDB) yang didapatkan dari Docker Hub
+    image: mongo:3
+
+    # Menggunakan volume 'app-db' yang telah didefisikan dan menentukan target data database yang digunakan
+    volumes:
+      - app-db:/data/db
+
+    # Melakukan restart container apabila terjadi kesalahan pada container (restart policy)
+    restart: always
+
+# Pendeklarasian volume docker yang akan digunakan pada project ini
+volumes:
+  # Menggunakan volume dengan nama 'app-db'
+  # Jika tidak ada volume tersebut, akan dibuatkan secara otomatis
+  app-db:
