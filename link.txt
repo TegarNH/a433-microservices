@@ -1,0 +1,2 @@
+Karsajobs : https://github.com/users/TegarNH/packages/container/package/a433-microservices%2Fkarsajobs
+Karsajobs-ui : https://github.com/users/TegarNH/packages/container/package/a433-microservices%2Fkarsajobs-ui
