@@ -1,0 +1,62 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Deklarasi object PersistentVolume
+
+# Menggunakan API Kubernetes versi 1.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu PersistentVolume
+kind: PersistentVolume
+
+# Informasi mengenai resource PersistentVolume
+metadata:
+  # Mendefinisikan nama dari PersistentVolume mongodb
+  name: mongo-pv-volume
+  # Menentukan tipe volume yang digunakan oleh PersistentVolume
+  labels:
+    type: local
+
+# Menentukan spesifikasi dari PersistentVolume
+spec:
+  # Menentukan nama Storage Class
+  storageClassName: manual
+  # Menentukan kapasitas dari PersistentVolume
+  capacity:
+    # 1Gi adalah 1 GB
+    storage: 1Gi
+  # Menentukan access mode
+  accessModes:
+    - ReadWriteOnce
+  # Menentukan host path mongodb
+  hostPath:
+    path: "/mnt/data/mongo"
+
+---
+# Deklarasi object PersistentVolumeClaim
+
+# Menggunakan API Kubernetes versi 1.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu PersistentVolumeClaim
+kind: PersistentVolumeClaim
+
+# Informasi mengenai resource PersistentVolumeClaim
+metadata:
+  # Mendefinisikan nama dari PersistentVolumeClaim mongodb
+  name: mongo-pv-claim
+  # Mendefinisikan label seperti nama label yang digunakan oleh PersistentVolumeClaim
+  labels:
+    app: mongo
+
+# Menentukan spesifikasi dari PersistentVolumeClaim
+spec:
+  # Menentukan nama Storage Class
+  storageClassName: manual
+  # Menentukan access mode
+  accessModes:
+    - ReadWriteOnce
+
+  # Menentukan permintaan resource penyimpanan
+  resources:
+    requests:
+      storage: 1Gi

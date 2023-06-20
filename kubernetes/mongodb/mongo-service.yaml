@@ -1,0 +1,31 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Service
+# Berfungsi untuk memisahkan sejumlah resource yang berbeda di dalam cluster.
+kind: Service
+
+# Informasi mengenai resource Service
+metadata:
+  # Mendefinisikan nama dari service mongodb
+  name: karsajobs-db
+  # Mendefinisikan label seperti nama label dan tier yang digunakan oleh service
+  labels:
+    app: karsajobs
+    tier: backend
+
+# Menentukan spesifikasi dari service
+spec:
+  # Menentukan port dan protokol yang digunakan service
+  # Port default dari mongodb adalah 27017
+  ports:
+    - port: 27017
+  # Menentukan selector yang digunakan service seperti nama dan tier
+  selector:
+    app: karsajobs
+    tier: backend
+  # Mendefinisikan clusterIP None agar tidak mengalokasikan IP address untuk Service mongodb
+  clusterIP: None

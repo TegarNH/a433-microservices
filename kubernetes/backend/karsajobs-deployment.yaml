@@ -1,0 +1,70 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 'apps/v1'.
+# Penggunaan versi 'apps/v1' dikarenakan object Deployment memiliki API group-nya sendiri sehingga bukan bagian dari API inti.
+apiVersion: apps/v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Deployment
+kind: Deployment
+
+# Informasi mengenai resource pod
+metadata:
+  # Mendefinisikan nama dari pod server (backend-end)
+  name: karsajobs-backend
+  # Mendefinisikan label seperti nama label dan tier yang digunakan oleh pod
+  labels:
+    app: karsajobs
+    tier: backend
+
+# Menentukan spesifikasi dari pod
+spec:
+  # Menentukan replica (jumlah Pod yang identik) dari pod berjumlah 1
+  replicas: 1
+  # Menentukan selector untuk mengidentifikasi pod
+  selector:
+    # selector yang digunakan yaitu yang memiliki label app karsajobs dan tier backend
+    matchLabels:
+      app: karsajobs
+      tier: backend
+
+  # Menentukan template pod seperti metadata dan spec container
+  template:
+    # Metadata dari template pod (sama dengan metadata labels sebelumnya)
+    metadata:
+      labels:
+        app: karsajobs
+        tier: backend
+
+    # Berisi spesifikasi container
+    spec:
+      containers:
+        # nama dari cointainer
+        - name: karsajobs-backend
+          # menggunakan image dari github package
+          image: ghcr.io/tegarnh/a433-microservices/karsajobs:latest
+          # mendefisikan port yang akan digunakan container
+          ports:
+            - containerPort: 8080
+
+          # menambahkan env yang digunakan pada container
+          env:
+            # mendefinisikan port aplikasi
+            - name: APP_PORT
+              value: "8080"
+            # mendefinisikan nama database yang digunakan aplikasi (diambil dari mongo-service)
+            - name: MONGO_HOST
+              value: "karsajobs-db"
+            # mendefinisikan username mongodb untuk mengkoneksikan database
+            - name: MONGO_USER
+              # value diambil dari object Secret mongo-secret dengan key MONGO_ROOT_USERNAME (berada di mongo-secret.yaml)
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_USERNAME
+            # mendefinisikan password mongodb untuk mengkoneksikan database
+            - name: MONGO_PASS
+              # value diambil dari object Secret mongo-secret dengan key MONGO_ROOT_PASSWORD (berada di mongo-secret.yaml)
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_PASSWORD

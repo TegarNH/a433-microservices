@@ -1,0 +1,20 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu ConfigMap
+kind: ConfigMap
+
+# Informasi mengenai resource ConfigMap
+metadata:
+  # Mendefinisikan nama dari ConfigMap
+  name: mongo-config
+
+# Tempat menyimpan data atau informasi yang terpisah dari Pod atau Deployment manifest, Format data adalah key-value
+data:
+  # Untuk menyimpan path volume dari mongodb yang akan di-mount
+  mongo.conf: |
+    storage:
+      dbPath:/data/db
