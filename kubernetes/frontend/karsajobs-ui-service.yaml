@@ -1,0 +1,32 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Service
+# Berfungsi untuk memisahkan sejumlah resource yang berbeda di dalam cluster.
+kind: Service
+
+# Informasi mengenai resource Service
+metadata:
+  # Mendefinisikan nama dari service App (front-end)
+  name: karsajobs-frontend
+  # Mendefinisikan label seperti nama label dan tier yang digunakan oleh service
+  labels:
+    app: karsajobs
+    tier: frontend
+
+# Menentukan spesifikasi dari service
+spec:
+  # Menentukan port dan protokol yang digunakan service
+  ports:
+    - port: 8000
+      protocol: TCP
+  # Menentukan selector yang digunakan service seperti nama dan tier
+  selector:
+    app: karsajobs
+    tier: frontend
+  # Menentukan tipe service yang digunakan
+  # Disini menggunakan NodePort untuk mengekspos Service pada port yang sama dari setiap Node yang dipilih
+  type: NodePort
