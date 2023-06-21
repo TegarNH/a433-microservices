@@ -1,0 +1,35 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Service
+# Berfungsi untuk memisahkan sejumlah resource yang berbeda di dalam cluster.
+kind: Service
+
+# Informasi mengenai resource Service
+metadata:
+  # Mendefinisikan nama dari service order
+  name: order-service
+  # Mendefinisikan label seperti nama label yang digunakan oleh service
+  labels:
+    app: order
+
+# Menentukan spesifikasi dari service
+spec:
+  # Menentukan port dan protokol yang digunakan service
+  ports:
+    # Mendefinisikan port yang digunakan oleh order service untuk menerima data order dan mengirimkan ke shipping service
+    - name: order-service # nama alias dari port
+      port: 3000 # Port yang dibuka untuk order service
+      protocol: TCP # Protokol yang digunakan
+      targetPort: 3000 # Port container yang menerima traffic order service
+      nodePort: 30000 # Menerapkan custom port pada nodePort untuk order service
+
+  # Menentukan selector yang digunakan service seperti nama
+  selector:
+    app: order
+  # Menentukan tipe service yang digunakan
+  # Disini menggunakan NodePort untuk mengekspos Service pada port yang sama dari setiap Node yang dipilih
+  type: NodePort

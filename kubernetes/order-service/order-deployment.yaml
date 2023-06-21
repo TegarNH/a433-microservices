@@ -1,0 +1,51 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 'apps/v1'.
+# Penggunaan versi 'apps/v1' dikarenakan object Deployment memiliki API group-nya sendiri sehingga bukan bagian dari API inti.
+apiVersion: apps/v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Deployment
+kind: Deployment
+
+# Informasi mengenai resource pod
+metadata:
+  # Mendefinisikan nama dari pod order service
+  name: order-service
+  # Mendefinisikan label seperti nama label yang digunakan oleh pod
+  labels:
+    app: order
+
+# Menentukan spesifikasi dari pod
+spec:
+  # Menentukan selector untuk mengidentifikasi pod
+  selector:
+    # selector yang digunakan yaitu yang memiliki label app order
+    matchLabels:
+      app: order
+
+  # Menentukan replica (jumlah Pod yang identik) dari pod berjumlah 1
+  replicas: 1
+
+  # Menentukan template pod seperti metadata dan spec container
+  template:
+    # Metadata dari template pod (sama dengan metadata labels sebelumnya)
+    metadata:
+      labels:
+        app: order
+
+    # Berisi spesifikasi container
+    spec:
+      containers:
+        # nama dari cointainer
+        - name: order-service
+          # menggunakan image dari github package
+          image: ghcr.io/tegarnh/a433-microservices/order-service:v1
+          # mendefisikan port yang akan digunakan container
+          ports:
+            - containerPort: 3000
+
+          # menambahkan env yang digunakan pada container
+          env:
+            # mendefinisikan nilai URL AMQP
+            - name: AMQP_URL
+              value: "amqp://10.244.0.25:5672"
