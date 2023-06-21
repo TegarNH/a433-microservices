@@ -1,0 +1,18 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Namespace
+# Berfungsi untuk memisahkan sejumlah resource yang berbeda di dalam cluster.
+kind: Namespace
+
+# Informasi mengenai resource namespace
+metadata:
+  # Mendefinisikan nama dari namespace
+  name: ecommerce
+
+  # Mendefinisikan label yang digunakan oleh namespace
+  labels:
+    app: ecommerce

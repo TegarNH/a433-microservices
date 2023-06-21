@@ -1,0 +1,40 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 1.
+# v1 adalah versi API inti yang berisi banyak resource paling umum seperti Pod dan Node.
+apiVersion: v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu Service
+# Berfungsi untuk memisahkan sejumlah resource yang berbeda di dalam cluster.
+kind: Service
+
+# Informasi mengenai resource Service
+metadata:
+  # Mendefinisikan nama dari service RabbitMQ
+  name: rabbitmq
+  # Mendefinisikan label seperti nama label yang digunakan oleh service
+  labels:
+    app: rabbitmq
+
+# Menentukan spesifikasi dari service
+spec:
+  # Menentukan port dan protokol yang digunakan service
+  ports:
+    # Mendefinisikan protokol amqp yang digunakan oleh RabbitMQ untuk dapat mengirim message antar sistem yang terdistribusi
+    - name: rabbitmq-amqp # nama alias dari port
+      port: 5672 # Port default dari protokol amqp RabbitMQ
+      targetPort: 5672 # Port container yang menerima traffic protokol amqp
+      nodePort: 30673 # Menerapkan custom port pada nodePort untuk protokol amqp
+
+    # Mendefinisikan port management interface untuk mengakses halaman RabbitMQ management interface
+    - name: rabbitmq-management # nama alias dari port
+      port: 15672 # Port default dari RabbitMQ management interface
+      targetPort: 15672 # Port container yang menerima traffic management interface
+      nodePort: 31673 # Menerapkan custom port pada nodePort untuk management interface
+
+  # Menentukan selector yang digunakan service seperti nama app
+  selector:
+    app: rabbitmq
+  # Menentukan tipe service yang digunakan
+  # Disini menggunakan NodePort untuk mengekspos Service pada port yang sama dari setiap Node yang dipilih
+  type: NodePort

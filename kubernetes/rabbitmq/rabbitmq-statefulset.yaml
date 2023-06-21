@@ -1,0 +1,100 @@
+# Tegar Naufal Hanip - tegarnauf_19
+
+# Menggunakan API Kubernetes versi 'apps/v1'.
+# Penggunaan versi 'apps/v1' dikarenakan object StatefulSet memiliki API group-nya sendiri sehingga bukan bagian dari API inti.
+apiVersion: apps/v1
+
+# Menentukan Kubernetes object yang digunakan, yaitu StatefulSet
+kind: StatefulSet
+
+# Informasi mengenai resource StatefulSet
+metadata:
+  # Mendefinisikan nama dari StatefulSet
+  name: rabbitmq
+  # Mendefinisikan label seperti nama label yang digunakan oleh StatefulSet
+  labels:
+    app: rabbitmq
+
+# Menentukan spesifikasi dari StatefulSet
+spec:
+  # Menentukan selector untuk mengidentifikasi StatefulSet
+  selector:
+    # selector yang digunakan yaitu yang memiliki label app rabbitmq
+    matchLabels:
+      app: rabbitmq
+
+  # Mendefinisikan nama service untuk menghubungkan dengan StatefulSet
+  serviceName: rabbitmq
+  # Menentukan replica (jumlah Pod yang identik) dari pod berjumlah 1
+  replicas: 1
+
+  # Menentukan template pod seperti metadata dan spec
+  template:
+    # Metadata dari template pod (sama dengan metadata labels sebelumnya)
+    metadata:
+      labels:
+        app: rabbitmq
+
+    # Menentukan spesifikasi untuk Pod
+    spec:
+      # Mendefinisikan container yang akan berjalan di dalam Pod.
+      containers:
+        # nama dari cointainer
+        - name: rabbitmq
+          # menggunakan image dari docker hub
+          image: rabbitmq:3.11-management
+
+          # mendefisikan port yang akan digunakan container
+          ports:
+            # Port 5672 untuk protokol amqp yang digunakan oleh RabbitMQ dalam mengirim message antar sistem
+            - name: amqp
+              containerPort: 5672
+            # Port 15672 untuk mengakses halaman RabbitMQ management interface
+            - name: management
+              containerPort: 15672
+
+          # Menentukan mount point untuk volume yang akan digunakan oleh container
+          volumeMounts:
+            # Nama volume untuk menyimpan data queue
+            - name: rabbitmq-data
+              # Path yang akan di mount pada volume
+              mountPath: /var/lib/rabbitmq/
+
+            # Nama volume untuk menyimpan data log
+            - name: rabbitmq-logs
+              # Path yang akan di mount pada volume
+              mountPath: /var/log/rabbitmq
+
+  # menentukan PersistentVolumeClaim template yang akan dibuat secara otomatis
+  volumeClaimTemplates:
+    # Mendefinisikan metadata dari VolumeClaim
+    - metadata:
+        # Nama dari volume claim data
+        name: rabbitmq-data
+
+      # Mendefinisikan spesifikasi dari VolumeClaim
+      spec:
+        # Menentukan access mode
+        accessModes:
+          - "ReadWriteOnce"
+
+        # Menentukan permintaan resource penyimpanan
+        resources:
+          requests:
+            storage: 1Gi
+
+    # Mendefinisikan metadata dari VolumeClaim
+    - metadata:
+        # Nama dari volume claim logs
+        name: rabbitmq-logs
+
+      # Mendefinisikan spesifikasi dari VolumeClaim
+      spec:
+        # Menentukan access mode
+        accessModes:
+          - "ReadWriteOnce"
+
+        # Menentukan permintaan resource penyimpanan
+        resources:
+          requests:
+            storage: 1Gi
