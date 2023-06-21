@@ -1,0 +1,2 @@
+order-service : https://github.com/users/TegarNH/packages/container/package/a433-microservices%2Forder-service
+shipping-service : https://github.com/users/TegarNH/packages/container/package/a433-microservices%2Fshipping-service
